@@ -23,10 +23,10 @@ export default function CoordinatesPage() {
       <h3>座標</h3>
 
       <div style={{ width: "300px", height: "100px", overflowY: "scroll", border: "1px solid #ccc", padding: "10px" }}>
-        {coordinates.map((coord, index) => (
+        {coordinates.slice(0, 10).map((coord, index) => (
           <div key={index}>
             ({coord.x}, {coord.y}, {coord.z})
-            {index < coordinates.length - 1 && ", "}
+            {index < 9 && ", "}
           </div>
         ))}
       </div>
