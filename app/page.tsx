@@ -18,6 +18,10 @@ export default function CoordinatesPage() {
     fetchCoordinates();
   }, []);
 
+  const filteredCoordinates = coordinates.filter(
+    (coord) => coord.x < 0 && coord.y > 0
+  );
+
   return (
     <div style={{ padding: "50px" }}>
       <h3>座標</h3>
@@ -35,6 +39,16 @@ export default function CoordinatesPage() {
         <OrbitControls />
 
         {coordinates.map((coord, index) => (
+          <Sphere key={index} args={[0.1, 32, 32]} position={[coord.x, coord.y, coord.z]}>
+            <meshStandardMaterial />
+          </Sphere>
+        ))}
+      </Canvas>
+
+      <Canvas camera={{ position: [0, 0, 25] }} style={{ width: "300px", height: "300px", background: "#e0e0e0" }}>
+        <OrbitControls />
+
+        {filteredCoordinates.map((coord, index) => (
           <Sphere key={index} args={[0.1, 32, 32]} position={[coord.x, coord.y, coord.z]}>
             <meshStandardMaterial />
           </Sphere>
