@@ -1,18 +1,20 @@
-import { promises as fs } from 'fs';
-import path from 'path';
+"use client";
+import { useEffect, useState } from 'react';
 
 type Coordinate = { x: number; y: number; z: number; };
 
-async function getCoordinates(): Promise<Coordinate[]> {
-  const filePath = path.join(process.cwd(), 'public', 'coordinates.json');
-  const jsonData = await fs.readFile(filePath, 'utf8');
-  const parsedData = JSON.parse(jsonData);
+export default function CoordinatesPage() {
+  const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
 
-  return parsedData.coordinates;
-}
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      const response = await fetch('/api');
+      const data = await response.json();
+      setCoordinates(data);
+    };
 
-export default async function CoordinatesPage() {
-  const coordinates = await getCoordinates();
+    fetchCoordinates();
+  }, []);
 
   return (
     <div style={{ padding: "50px" }}>
