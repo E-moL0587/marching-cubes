@@ -22,18 +22,18 @@ export default function CoordinatesPage() {
     <div style={{ padding: "50px" }}>
       <h3>座標</h3>
 
-      {coordinates.map((coord, index) => (
+      {coordinates.slice(0, 3).map((coord, index) => (
         <span key={index}>
           ({coord.x}, {coord.y}, {coord.z})
           {index < coordinates.length - 1 && ", "}
         </span>
       ))}
 
-      <Canvas style={{ height: "400px", background: "#f0f0f0" }}>
+      <Canvas camera={{ position: [0, 0, 25] }} style={{ width: "300px", height: "300px", background: "#f0f0f0" }}>
         <OrbitControls />
 
         {coordinates.map((coord, index) => (
-          <Sphere key={index} args={[0.2, 32, 32]} position={[coord.x, coord.y, coord.z]}>
+          <Sphere key={index} args={[0.1, 32, 32]} position={[coord.x, coord.y, coord.z]}>
             <meshStandardMaterial />
           </Sphere>
         ))}
