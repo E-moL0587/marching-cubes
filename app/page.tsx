@@ -34,14 +34,20 @@ export default function CoordinatesPage() {
     fetchCoordinates();
   }, []);
 
-  const handleFilter = () => {
+  const handle1 = () => {
+    setCoordinates(filterCoordinates(coordinates));
+    setTargetCameraSettings({ position: new THREE.Vector3(-30, 20, 10), fov: 20 });
+  };
+
+  const handle2 = () => {
     setCoordinates(filterCoordinates(coordinates));
     setTargetCameraSettings({ position: new THREE.Vector3(-30, 20, 10), fov: 20 });
   };
 
   return (
     <div style={{ padding: "50px" }}>
-      <button onClick={handleFilter} style={{ marginBottom: "20px" }}>拡大表示</button>
+      <button onClick={handle1} style={{ marginBottom: "20px" }}>handle1</button>
+      <button onClick={handle2} style={{ marginBottom: "20px" }}>handle2</button>
 
       <Canvas camera={{ position: [0, 10, 20], fov: 75 }} style={{ width: "300px", height: "300px", background: "#f0f0f0" }} onCreated={({ camera }) => cameraRef.current = camera as THREE.PerspectiveCamera }>
         <OrbitControls />
