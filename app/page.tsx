@@ -1,12 +1,28 @@
 "use client";
-import { Canvas } from '@react-three/fiber';
-import { useEffect, useState } from 'react';
+
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useEffect, useRef, useState } from 'react';
 import { Sphere, OrbitControls } from '@react-three/drei';
+import * as THREE from 'three';
+import { filterCoordinates } from './utils/filterCoordinates';
 
 type Coordinate = { x: number; y: number; z: number; };
 
+function CameraControls({ targetCameraSettings, cameraRef }: { targetCameraSettings: any, cameraRef: React.RefObject<THREE.PerspectiveCamera> }) {
+  useFrame(() => {
+    if (!cameraRef.current) return;
+    cameraRef.current.position.lerp(targetCameraSettings.position, 0.05);
+    cameraRef.current.fov += (targetCameraSettings.fov - cameraRef.current.fov) * 0.05;
+    cameraRef.current.updateProjectionMatrix();
+  });
+
+  return null;
+}
+
 export default function CoordinatesPage() {
   const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
+  const [targetCameraSettings, setTargetCameraSettings] = useState({ position: new THREE.Vector3(0, 10, 20), fov: 75 });
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 
   useEffect(() => {
     const fetchCoordinates = async () => {
@@ -18,26 +34,29 @@ export default function CoordinatesPage() {
     fetchCoordinates();
   }, []);
 
-  const filteredCoordinates = coordinates.filter(
-    (coord) => coord.x < 0 && coord.y > 0
-  );
+  const handleFilter = () => {
+    const filteredData = filterCoordinates(coordinates);
+    setCoordinates(filteredData);
+    setTargetCameraSettings({ position: new THREE.Vector3(-30, 20, 10), fov: 20 });
+  };
+
+  useEffect(() => {
+    if (cameraRef.current) {
+      cameraRef.current.position.set(0, 10, 20);
+      cameraRef.current.fov = 75;
+      cameraRef.current.updateProjectionMatrix();
+    }
+  }, []);
 
   return (
     <div style={{ padding: "50px" }}>
-      <Canvas camera={{ position: [0, 10, 20], fov: 75 }} style={{ width: "300px", height: "300px", background: "#f0f0f0" }}>
+      <button onClick={handleFilter} style={{ marginBottom: "20px" }}>拡大表示</button>
+
+      <Canvas camera={{ position: [0, 10, 20], fov: 75 }} style={{ width: "300px", height: "300px", background: "#f0f0f0" }} onCreated={({ camera }) => cameraRef.current = camera as THREE.PerspectiveCamera }>
         <OrbitControls />
+        <CameraControls targetCameraSettings={targetCameraSettings} cameraRef={cameraRef} />
 
         {coordinates.map((coord, index) => (
-          <Sphere key={index} args={[0.1, 32, 32]} position={[coord.x, coord.y, coord.z]}>
-            <meshStandardMaterial />
-          </Sphere>
-        ))}
-      </Canvas>
-
-      <Canvas camera={{ position: [-30, 20, 10], fov: 20 }} style={{ width: "300px", height: "300px", background: "#e0e0e0" }}>
-        <OrbitControls />
-
-        {filteredCoordinates.map((coord, index) => (
           <Sphere key={index} args={[0.1, 32, 32]} position={[coord.x, coord.y, coord.z]}>
             <meshStandardMaterial />
           </Sphere>
