@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Sphere, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { filterCoordinates } from './utils/filterCoordinates';
+import { addSurroundingPoints } from './utils/addSurroundingPoints';
 
 type Coordinate = { x: number; y: number; z: number; };
 
@@ -40,7 +41,7 @@ export default function CoordinatesPage() {
   };
 
   const handle2 = () => {
-    setCoordinates(filterCoordinates(coordinates));
+    setCoordinates(addSurroundingPoints(coordinates));
     setTargetCameraSettings({ position: new THREE.Vector3(-30, 20, 10), fov: 20 });
   };
 
