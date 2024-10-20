@@ -24,7 +24,7 @@ export default function CoordinatesPage() {
 
   return (
     <div style={{ padding: "50px" }}>
-      <Canvas camera={{ position: [0, 0, 25] }} style={{ width: "300px", height: "300px", background: "#f0f0f0" }}>
+      <Canvas camera={{ position: [0, 10, 20], fov: 75 }} style={{ width: "300px", height: "300px", background: "#f0f0f0" }}>
         <OrbitControls />
 
         {coordinates.map((coord, index) => (
@@ -34,7 +34,7 @@ export default function CoordinatesPage() {
         ))}
       </Canvas>
 
-      <Canvas camera={{ position: [0, 0, 25] }} style={{ width: "300px", height: "300px", background: "#e0e0e0" }}>
+      <Canvas camera={{ position: [-30, 20, 10], fov: 20 }} style={{ width: "300px", height: "300px", background: "#e0e0e0" }}>
         <OrbitControls />
 
         {filteredCoordinates.map((coord, index) => (
