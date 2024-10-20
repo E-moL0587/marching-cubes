@@ -35,18 +35,9 @@ export default function CoordinatesPage() {
   }, []);
 
   const handleFilter = () => {
-    const filteredData = filterCoordinates(coordinates);
-    setCoordinates(filteredData);
+    setCoordinates(filterCoordinates(coordinates));
     setTargetCameraSettings({ position: new THREE.Vector3(-30, 20, 10), fov: 20 });
   };
-
-  useEffect(() => {
-    if (cameraRef.current) {
-      cameraRef.current.position.set(0, 10, 20);
-      cameraRef.current.fov = 75;
-      cameraRef.current.updateProjectionMatrix();
-    }
-  }, []);
 
   return (
     <div style={{ padding: "50px" }}>
